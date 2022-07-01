@@ -5,11 +5,10 @@ import 'package:dio_cache_interceptor/dio_cache_interceptor.dart';
 import 'package:dio_cache_interceptor_db_store/dio_cache_interceptor_db_store.dart';
 import 'package:dio_smart_retry/dio_smart_retry.dart';
 import 'package:dio_wrapper/interceptor/adapter_interceptor.dart';
-import 'package:path_provider/path_provider.dart';
 
 import 'interceptor/connection_interceptor.dart';
 
-/// A Calculator.
+///
 class DioWrapper {
   Map<String, dynamic> headers;
   final String baseUrl;
@@ -21,6 +20,7 @@ class DioWrapper {
   late BaseOptions options;
   late Dio _dio;
   final CancelToken _cancelToken = CancelToken();
+  String? cachePath;
 
   DioWrapper(
       {required this.baseUrl,
@@ -28,11 +28,12 @@ class DioWrapper {
       this.receiveTimeout = 30000,
       this.cacheOptions,
       this.retryInterceptor,
+      this.cachePath,
       this.headers = const {}}) {
     _init();
   }
 
-  _init() async {
+  _init() {
     options = BaseOptions(
         connectTimeout: connectionTimeout,
         receiveTimeout: receiveTimeout,
@@ -45,11 +46,11 @@ class DioWrapper {
         keyBuilder: CacheOptions.defaultCacheKeyBuilder,
         allowPostMethod: false,
         maxStale: const Duration(days: 1),
-        store: BackupCacheStore(
-            primary: MemCacheStore(),
-            secondary: DbCacheStore(
-                databasePath:
-                    (await getApplicationDocumentsDirectory()).path)));
+        store: cachePath == null
+            ? MemCacheStore()
+            : BackupCacheStore(
+                primary: MemCacheStore(),
+                secondary: DbCacheStore(databasePath: cachePath!)));
     _dio = Dio(options);
     retryInterceptor ??= RetryInterceptor(
       dio: _dio,
@@ -113,27 +114,26 @@ class DioWrapper {
   }
 
   Future put(
-      String path, {
-        Map<String, dynamic> query = const {},
-        Map<String, dynamic> data = const {},
-        CancelToken? token,
-      }) async {
+    String path, {
+    Map<String, dynamic> query = const {},
+    Map<String, dynamic> data = const {},
+    CancelToken? token,
+  }) async {
     Response response = await _dio.put(path,
         data: data, queryParameters: query, cancelToken: token ?? _cancelToken);
     return response.data;
   }
 
   Future patch(
-      String path, {
-        Map<String, dynamic> query = const {},
-        Map<String, dynamic> data = const {},
-        CancelToken? token,
-      }) async {
+    String path, {
+    Map<String, dynamic> query = const {},
+    Map<String, dynamic> data = const {},
+    CancelToken? token,
+  }) async {
     Response response = await _dio.patch(path,
         data: data, queryParameters: query, cancelToken: token ?? _cancelToken);
     return response.data;
   }
-
 
   Future uploadFile(
     String path,
