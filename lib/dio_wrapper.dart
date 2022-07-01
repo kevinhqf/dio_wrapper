@@ -10,7 +10,7 @@ import 'package:path_provider/path_provider.dart';
 import 'interceptor/connection_interceptor.dart';
 
 /// A Calculator.
-class Http {
+class DioWrapper {
   Map<String, dynamic> headers;
   final String baseUrl;
   final int connectionTimeout;
@@ -22,7 +22,7 @@ class Http {
   late Dio _dio;
   final CancelToken _cancelToken = CancelToken();
 
-  Http(
+  DioWrapper(
       {required this.baseUrl,
       this.connectionTimeout = 30000,
       this.receiveTimeout = 30000,
