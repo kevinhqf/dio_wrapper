@@ -16,8 +16,13 @@ class LoggerInterceptor extends InterceptorsWrapper {
   );
   @override
   void onResponse(Response response, ResponseInterceptorHandler handler) {
-    logger.d(response.requestOptions);
-    logger.d(response.data);
+    logger.d({
+      "url":response.realUri,
+      "headers":response.requestOptions.headers,
+      "method":response.requestOptions.method,
+      "params":response.requestOptions.data,
+      "data":response.data
+    });
     // log('-----------------DioWrapper ${response.requestOptions.method.toUpperCase()} Request------------------>',
     //     time: DateTime.now());
     // log('url:${response.requestOptions.uri.toString()}');
