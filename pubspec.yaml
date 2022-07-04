@@ -1,6 +1,6 @@
 name: dio_wrapper
 description: A new Flutter package project.
-version: 0.0.2
+version: 0.0.1
 homepage: https://github.com/kevinhqf/dio_wrapper.git
 
 environment:
@@ -15,7 +15,7 @@ dependencies:
   dio_cache_interceptor: ^3.2.7
   dio_cache_interceptor_db_store: ^4.1.1
   path_provider: ^2.0.11
-
+  logger: ^1.1.0
 
   flutter:
     sdk: flutter
