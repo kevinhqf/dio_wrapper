@@ -5,6 +5,7 @@ import 'dart:developer';
 import 'package:dio/dio.dart';
 import 'package:dio_cache_interceptor/dio_cache_interceptor.dart';
 import 'package:dio_cache_interceptor_db_store/dio_cache_interceptor_db_store.dart';
+import 'package:dio_logger/dio_logger.dart';
 import 'package:dio_smart_retry/dio_smart_retry.dart';
 import 'package:dio_wrapper/interceptor/adapter_interceptor.dart';
 
@@ -71,7 +72,7 @@ class DioWrapper {
     _dio.interceptors.add(retryInterceptor!);
     _dio.interceptors.add(DioCacheInterceptor(options: cacheOptions!));
     _dio.interceptors.add(AdapterInterceptor(headers: headers));
-    _dio.interceptors.add(LoggerInterceptor());
+    _dio.interceptors.add(dioLoggerInterceptor);
   }
 
   /*
